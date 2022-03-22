@@ -1,41 +1,41 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
+  <div class="world">
+    <audio ref="musicPlayer" autoplay loop>
+      <source src="../soundtrack/music.mp3" type="audio/mpeg">
+    </audio>
+    <div class="banner">
+       <h1 v-if="!welcomeMsg" class="banner__title">Super Luigi</h1>
+       <h1 v-if="welcomeMsg" class="banner__title">Comming soon</h1>
+     </div>
+     <a v-if="!welcomeMsg" @click="startFunc" class="button button-start" href="#">Start</a>
+     <MarioCharacter :start="startValue" />
+     <div class="land"></div>
   </div>
 </template>
 
 <script>
+import MarioCharacter from './MarioCharacter.vue'
 export default {
   name: 'HelloWorld',
-  props: {
-    msg: String
-  }
+  components: {
+    MarioCharacter
+  },
+  data() {
+    return {
+      startValue: false,
+      welcomeMsg: false,
+    }
+  },
+  methods: {
+    startFunc(e) {
+      e.preventDefault();
+      this.startValue = true;
+      this.$refs.musicPlayer.play();
+      setTimeout(() => {
+        this.welcomeMsg = true;
+      }, 4000);
+    }
+  },
 }
 </script>
 
@@ -54,5 +54,94 @@ li {
 }
 a {
   color: #42b983;
+}
+
+.button {
+  text-decoration: none;
+  background-color: #9a6e32;
+  color: #fff;
+  transition: all .25s cubic-bezier(.25,.46,.45,.94);
+  border-radius: 8px;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.button:hover {
+  background-color:#c89856;
+  transition: all .25s cubic-bezier(.25,.46,.45,.94);
+}
+
+.button-start {
+  padding: 10px 20px;
+  position: absolute;
+  top: 324px;
+  left: 0;
+  right: 0;
+  max-width: 60px;
+  margin: 0 auto;
+}
+
+.world {
+  overflow: hidden;
+  position: relative;
+  background-image: url('../images/sky.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100vh;
+  width: 100vw;
+}
+
+.land {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 116px;
+  background-image: url('../images/land.jpg');
+}
+
+.banner {
+  position: absolute;
+  top: 80px;
+  left: 0;
+  right: 0;
+  max-width: 416px;
+  margin: 0 auto;
+  background-color: #e35909;
+  -webkit-box-shadow: -4px 6px 17px 6px rgba(0,0,0,0.26); 
+  box-shadow: -4px 6px 17px 6px rgba(0,0,0,0.26);
+}
+
+.banner:after {
+  content: '';
+  display: block;
+  position: absolute;
+  top: -4px;
+  left: -2px;
+  width: 99%;
+  height: 98%;
+  background: transparent;
+  border: 6px solid transparent;
+  animation: circular-border 1s linear infinite;
+}
+
+.banner__title {
+  margin: 0;
+  padding: 60px 30px;
+  color: #fff;
+  font-size: 60px;
+}
+
+@keyframes circular-border {
+    0% {
+      border-color: #e35909;
+    }
+ 
+    50% {
+      border-color: #fffb26;
+    }
+ 
+    100% {
+      border-color: #e35909;
+    }
 }
 </style>
