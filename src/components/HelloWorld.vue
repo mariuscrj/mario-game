@@ -3,9 +3,9 @@
     <audio ref="musicPlayer" autoplay loop>
       <source src="../soundtrack/music.mp3" type="audio/mpeg">
     </audio>
-    <div class="banner">
-       <h1 v-if="!welcomeMsg" class="banner__title">Super Luigi</h1>
-       <h1 v-if="welcomeMsg" class="banner__title">Comming soon</h1>
+    <div v-if="!welcomeMsg" class="banner">
+       <h1 class="banner__title">Super Luigi</h1>
+       <!--<h1 v-if="welcomeMsg" class="banner__title">Comming soon</h1>-->
      </div>
      <a v-if="!welcomeMsg" @click="startFunc" class="button button-start" href="#">Start</a>
      <MarioCharacter :start="startValue" />
@@ -30,7 +30,7 @@ export default {
     startFunc(e) {
       e.preventDefault();
       this.startValue = true;
-      this.$refs.musicPlayer.play();
+      //this.$refs.musicPlayer.play();
       setTimeout(() => {
         this.welcomeMsg = true;
       }, 4000);

@@ -1,5 +1,5 @@
 <template>
-    <div class="character" :class="{characterAnimation: start}">
+    <div ref="characterRef" class="character" :class="{characterAnimation: start}">
         <div class="character__wrapper">
             <div class="character__hat"></div>
             <div class="character__face">
@@ -23,9 +23,43 @@ export default {
   props: {
     start: Boolean,
   },
+  data() {
+      return {
+          yCor: 0
+      }
+  },
+  methods: {
+      init() {
+        let cssProps = document.querySelector(':root');
+        this.$refs.characterRef.classList.remove('characterAnimation');
+        this.$refs.characterRef.classList.add('character__init');
+        window.addEventListener('keydown', (e) => {
+            console.log(e.key);
+            if (e.key == 'ArrowUp') {
+                this.$refs.characterRef.classList.add('character__jump');
+                cssProps.style.setProperty('--y-cor', -80 + 'px');
+                setTimeout(() => {
+                    this.$refs.characterRef.classList.remove('character__jump');
+                    cssProps.style.setProperty('--y-cor', 0);
+                }, 1000);
+            }
+        });
+      }
+  },
+  watch: { 
+    start:function() {
+        setTimeout(() => {
+            this.init();
+        }, 4000);
+    }
+  }
 }
 </script>
 <style scoped>
+    :root {
+        --y-cor: 0;
+    }
+
     .character {
         position: absolute;
         top: 67%;
@@ -209,6 +243,41 @@ export default {
 
     .characterAnimation .character__leg--right {
         animation: leg-move-right 0.6s infinite;
+    }
+
+    /*character states*/
+    .character__init {
+        transform: translateY(0) !important;
+    }
+
+    .character__jump {
+        animation: jump 1s linear;
+    }
+
+    .character__jump .character__arm--left {
+        transform: rotate(-80deg);
+        transform-origin: center top;
+    }
+
+    .character__jump .character__arm--right {
+        transform: rotate(30deg);
+        transform-origin: center top;
+    }
+
+    .character__jump .character__leg--left {
+        transform: rotate(-25deg);
+        transform-origin: center top;
+    }
+
+    .character__jump .character__leg--right {
+        transform: rotate(25deg);
+        transform-origin: center top;
+    }
+
+    @keyframes jump {
+        0% { transform: translateY(0%); }
+        50% { transform: translateY(-150%); }
+        100% { transform: translateY(0%); }
     }
 
     @keyframes mario-walk {
