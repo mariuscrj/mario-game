@@ -9,6 +9,11 @@
      </div>
      <a v-if="!welcomeMsg" @click="startFunc" class="button button-start" href="#">Start</a>
      <MarioCharacter :start="startValue" />
+     <div v-if="welcomeMsg" class="obstacles">
+       <div class="obstacles__item"></div>
+       <div class="obstacles__item"></div>
+       <div class="obstacles__item"></div>
+     </div>
      <div class="land"></div>
   </div>
 </template>
@@ -129,6 +134,32 @@ a {
   padding: 60px 30px;
   color: #fff;
   font-size: 60px;
+}
+
+.obstacles {
+  position: absolute;
+  top: 70%;
+  right: -10%;
+  width: 100%;
+}
+
+.obstacles__item {
+  position: relative;
+  display: inline-block;
+  width: 80px;
+  height: 70px;
+  background-color: #42b983;
+  margin-right: 15%;
+}
+
+.obstacles__item::before {
+  content: '';
+  position: absolute;
+  display: block;
+  width: 100px;
+  height: 20px;
+  background-color: #42b983;
+  left: -10px;
 }
 
 @keyframes circular-border {

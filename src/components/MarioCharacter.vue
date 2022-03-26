@@ -25,23 +25,49 @@ export default {
   },
   data() {
       return {
-          yCor: 0
+          xCorCurrent: 0,
+          xCorChanged: 0,
       }
   },
   methods: {
       init() {
         let cssProps = document.querySelector(':root');
+        cssProps.style.setProperty('--y-cor', 0);
+        cssProps.style.setProperty('--x-cor-changed', 0);
         this.$refs.characterRef.classList.remove('characterAnimation');
         this.$refs.characterRef.classList.add('character__init');
         window.addEventListener('keydown', (e) => {
             console.log(e.key);
-            if (e.key == 'ArrowUp') {
-                this.$refs.characterRef.classList.add('character__jump');
-                cssProps.style.setProperty('--y-cor', -80 + 'px');
-                setTimeout(() => {
-                    this.$refs.characterRef.classList.remove('character__jump');
-                    cssProps.style.setProperty('--y-cor', 0);
-                }, 1000);
+            switch(e.key) {
+                case 'ArrowUp':
+                    this.$refs.characterRef.classList.add('character__jump');
+                    cssProps.style.setProperty('--y-cor', -150 + '%');
+                    setTimeout(() => {
+                        this.$refs.characterRef.classList.remove('character__jump');
+                        cssProps.style.setProperty('--y-cor', 0);
+                    }, 300);
+                    break;
+                case 'ArrowRight':
+                    this.$refs.characterRef.classList.add('character__forward');
+                    this.xCorChanged += 5;
+                    cssProps.style.setProperty('--char-direction', 0);
+                    cssProps.style.setProperty('--x-cor-changed', this.xCorChanged + 'vw');
+                    setTimeout(() => {
+                        this.$refs.characterRef.classList.remove('character__forward');
+                        cssProps.style.setProperty('--x-cor-current', this.xCorChanged + 'vw');
+                    }, 300);
+                    break;
+                case 'ArrowLeft':
+                    this.$refs.characterRef.classList.add('character__forward');
+                    this.xCorChanged -= 5;
+                    cssProps.style.setProperty('--char-direction', -180 + 'deg');
+                    cssProps.style.setProperty('--x-cor-changed', this.xCorChanged + 'vw');
+                    setTimeout(() => {
+                        this.$refs.characterRef.classList.remove('character__forward');
+                        cssProps.style.setProperty('--x-cor-current', this.xCorChanged + 'vw');
+                    }, 300);
+                    break;
+                default:
             }
         });
       }
@@ -57,7 +83,10 @@ export default {
 </script>
 <style scoped>
     :root {
-        --y-cor: 0;
+        --x-cor-changed: 0%;
+        --x-cor-current: 0%;
+        --y-cor: 0%;
+        --char-direction: 0;
     }
 
     .character {
@@ -247,11 +276,12 @@ export default {
 
     /*character states*/
     .character__init {
-        transform: translateY(0) !important;
+        /*transform: translateY(0) !important;*/
+        transform: translate(var(--x-cor-changed), var(--y-cor)) rotateY(var(--char-direction))!important;
     }
 
     .character__jump {
-        animation: jump 1s linear;
+        animation: jump 300ms linear;
     }
 
     .character__jump .character__arm--left {
@@ -274,10 +304,29 @@ export default {
         transform-origin: center top;
     }
 
+    .character__forward {
+        animation: forward 300ms linear;
+    }
+
+    .character__forward .character__leg--left {
+        transform: rotate(-25deg);
+        transform-origin: center top;
+    }
+
+    .character__forward .character__leg--right {
+        transform: rotate(25deg);
+        transform-origin: center top;
+    }
+
     @keyframes jump {
-        0% { transform: translateY(0%); }
-        50% { transform: translateY(-150%); }
-        100% { transform: translateY(0%); }
+        0% { transform: translate(var(--x-cor-changed), 0%) rotateY(var(--char-direction)); }
+        50% { transform: translate(var(--x-cor-changed), var(--y-cor))rotateY(var(--char-direction)); }
+        100% { transform: translate(var(--x-cor-changed), 0%) rotateY(var(--char-direction)); }
+    }
+
+    @keyframes forward {
+        0% { transform: translate(var(--x-cor-current), var(--y-cor)) rotateY(var(--char-direction)); }
+        100% { transform: translate(var(--x-cor-changed), var(--y-cor)) rotateY(var(--char-direction)); }
     }
 
     @keyframes mario-walk {
